@@ -1,0 +1,120 @@
+#: import dp kivy.metrics.dp
+#: import StringProperty kivy.properties.StringProperty
+
+
+<FileDialog>:
+    orientaion: "vertical"
+    size_hint_y: None
+    height: "50dp"
+
+    MDTextField:
+        id: fname
+        hint_text: "File Name to save"
+        text: ".txt"
+
+
+<FontChangeDialog>:
+    orientation: "vertical"
+    spacing: "10dp"
+    size_hint_y: None
+    height: "100dp"
+
+    MDBoxLayout:
+        orientation: "horizontal"
+        MDLabel:
+            text: "Font Face"
+
+        MDTextField:
+            id: font
+            text: "Click to select font"
+            on_focus: if self.focus: app.fonts_menu.open()
+            on_text: app.filter_fonts()
+
+    MDBoxLayout:
+        orientation: "horizontal"
+        MDLabel:
+            text: "Font Size"
+
+        MDTextField:
+            id: font_size_input
+            text: str(app.texteditor.ids.text_box.font_size)
+            on_focus: if self.focus: app.font_size_menu.open()
+            on_text: app.filter_font_sizes()
+
+
+<ToolTipIconButton@MDIconButton+MDTooltip>
+
+
+<RightCheckBox@IRightBody+MDCheckbox>:
+    size_hint: None, None
+    size: "48dp", "48dp"
+
+
+<ListItemWithCheckbox>:
+    ripple_behavior: False
+    RightCheckBox:
+        id: wrap_check_box
+        on_active: app.on_text_wrap(*args) 
+
+<TextEditor>:
+    MDFloatLayout:
+        md_bg_color: (32/255, 33/255, 36/255)
+        MDTopAppBar:
+            id: toolbar
+            widget_style: "android"
+            title: "E-Note"
+            right_action_items: [["content-save", lambda x: app.open_file_manager("save"), "Save"], ["file-import", lambda x: app.open_file_manager("open"), "Open"], ["dots-vertical", lambda x: app.open_settings_menu(x), "Settings"]]
+            pos_hint: {"top": 1}
+
+        MDBoxLayout:
+            MDFloatLayout:
+                MDBoxLayout:
+                    padding: 10, 20, 0, 5 # left, top, right, bottom
+                    pos_hint: {"x": 0.02, "y": 0.78} # Y: top, y, center_y & X: right, x, center_x
+                    ToolTipIconButton:
+                        icon: "redo"
+                        style: "tonal"
+                        on_press: root.ids.text_box.do_redo()
+                        tooltip_text: "Redo"
+                    ToolTipIconButton:
+                        icon: "undo"
+                        style: "tonal"
+                        on_press: root.ids.text_box.do_undo()
+                        tooltip_text: "Undo"
+                    ToolTipIconButton:
+                        icon: "content-cut"
+                        style: "tonal"
+                        on_press: root.ids.text_box.cut()
+                        tooltip_text: "Cut"
+                    ToolTipIconButton:
+                        icon: "content-paste"
+                        style: "tonal"
+                        on_press: root.ids.text_box.paste()
+                        tooltip_text: "Paste"
+                    ToolTipIconButton:
+                        icon: "content-copy"
+                        style: "tonal"
+                        on_press: root.ids.text_box.copy()
+                        tooltip_text: "Copy"
+                    ToolTipIconButton:
+                        icon: "select-all"
+                        style: "tonal"
+                        on_press: root.ids.text_box.select_all()
+                        tooltip_text: "Select All"
+
+                MDTextFieldRect:
+                    id: text_box
+                    hint_text: 'Write Here'
+                    line_anim: False
+                    font_name: "Comic"
+                    background_color: app.theme_cls.bg_normal
+                    foreground_color: (1, 1, 1)
+                    mode: 'rectangle'
+                    multiline: True
+                    size_hint: None, None
+                    width: dp(root.width - (root.width * 0.2 + 50))
+                    height: dp(root.height - (root.height * 0.34 + 50))
+                    pos_hint_y: None
+                    pos_hint: {"center_x": 0.5}
+                    y: dp(30)
+
